@@ -1,0 +1,78 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app/backend
+      - ./secrets:/app/secrets:ro
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_PASSWORD=12345
+      - DB_NAME=taxidb
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    hostname: taxi-backend
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_started
+    command: go run backend/main.go
+    ports:
+      - "8081:8081"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    depends_on:
+      - backend
+    hostname: taxi-frontend.bogdan.com
+    ports:
+      - "3000:3000"
+    
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: taxidb
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d/
+      - ../postgres-local:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  proxy:
+    image: nginx:alpine
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./proxy/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+
+  migrator:
+    image: golang:1.21
+    volumes:
+      - ./migrations:/migrations
+    entrypoint: >
+      bash -c "go install github.com/pressly/goose/v3/cmd/goose@latest &&
+               goose -dir /migrations postgres 'host=db user=postgres password=12345 dbname=taxidb sslmode=disable' up"
+    depends_on:
+      - db
+
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10

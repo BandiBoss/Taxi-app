@@ -1,0 +1,30 @@
+services:
+  backend:
+    image: docker.io/bandiboss/taxiapp:latest
+    env_file: /opt/taxi-app/.env
+    volumes:
+      - /home/ec2-user/ec256-private.pem:/app/secrets/ec256-private.pem:ro
+    ports:
+      - "8081:8081"
+    restart: always
+
+  frontend:
+    image: docker.io/bandiboss/taxiapp-frontend:latest
+    env_file: /opt/taxi-app/.env
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    restart: always
+    
+  proxy:
+    image: nginx:alpine
+    ports:
+      - "80:8080"
+    volumes:
+      - /opt/taxi-app/proxy/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+    restart: always
+
+
