@@ -28,14 +28,14 @@ import (
 func StartOrderSimulation(repo repository.OrderRepository, ch *amqp091.Channel) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userID := c.MustGet("userID").(int)
-		// 1) parse the order ID
+		
 		orderID, err := strconv.Atoi(c.Param("orderId"))
 		if err != nil {
 			utils.ErrorResponse(c, http.StatusBadRequest, "Invalid order ID", err)
 			return
 		}
 
-		// 2) ensure it’s still “created” and belongs to the user
+		
 		status, err := repo.GetOrderStatus(orderID, userID)
 		if err != nil {
 			utils.ErrorResponse(c, http.StatusNotFound, "Order not found", err)
@@ -46,7 +46,7 @@ func StartOrderSimulation(repo repository.OrderRepository, ch *amqp091.Channel) 
 			return
 		}
 
-		// 3) pick a random active driver
+		
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
 		driverID, err := repo.GetRandomActiveDriver()
 		if err != nil {
@@ -54,13 +54,13 @@ func StartOrderSimulation(repo repository.OrderRepository, ch *amqp091.Channel) 
 			return
 		}
 
-		// 4) assign & flip to in_progress
+		
 		if err := repo.AssignDriverAndStart(orderID, driverID); err != nil {
 			utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to update order status", err)
 			return
 		}
 
-		// 5) fire off the simulator
+		
 		go simulator.SimulateMovement(driverID, orderID, ch, "driver_updates", repo, r, 30, 1*time.Second)
 
 		c.JSON(http.StatusOK, gin.H{

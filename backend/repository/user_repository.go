@@ -48,7 +48,7 @@ func (r *userRepository) GetUserByUsername(username string) (*User, error) {
 	return &user, nil
 }
 
-// Save a new refresh token
+
 func (r *userRepository) SaveRefreshToken(tokenID string, userID int, expiresAt string) error {
 	_, err := r.db.Exec(
 		`INSERT INTO refresh_tokens (token_id, user_id, issued_at, expires_at)
@@ -58,7 +58,7 @@ func (r *userRepository) SaveRefreshToken(tokenID string, userID int, expiresAt 
 	return err
 }
 
-// Delete a refresh token (e.g., on refresh or logout)
+
 func (r *userRepository) DeleteRefreshToken(tokenID string) error {
 	_, err := r.db.Exec(
 		`DELETE FROM refresh_tokens WHERE token_id=$1`,
@@ -67,7 +67,7 @@ func (r *userRepository) DeleteRefreshToken(tokenID string) error {
 	return err
 }
 
-// Get user ID by refresh token (and check expiry)
+
 func (r *userRepository) GetUserIDByRefreshToken(tokenID string) (int, error) {
 	var userID int
 	err := r.db.QueryRow(

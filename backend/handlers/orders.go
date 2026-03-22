@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CreateOrderRequest represents the request body for creating an order
+
 type CreateOrderRequest struct {
 	Origin      string `json:"origin"`
 	Destination string `json:"destination"`
@@ -86,7 +86,7 @@ func GetOrders(repo repository.OrderRepository) gin.HandlerFunc {
 			sortDirection = "DESC"
 		}
 
-		// Logging for debugging
+		
 		logMsg := "[GetOrders] userID=%d, page=%d, limit=%d, offset=%d, sortField=%s, sortDirection=%s"
 		fmt.Printf(logMsg+"\n", userID, page, limit, offset, sortField, sortDirection)
 

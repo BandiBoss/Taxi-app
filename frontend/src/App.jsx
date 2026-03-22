@@ -71,7 +71,7 @@ function App() {
           element={loggedIn ? <Navigate to="/orders" /> : <Register />}
         />
 
-        {/* Все защищённые страницы внутри ProtectedLayout */}
+        
         <Route path="/*" element={<ProtectedLayout />} />
       </Routes>
     </ThemeProvider>

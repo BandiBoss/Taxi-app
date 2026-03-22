@@ -15,7 +15,7 @@ import (
 	"Taxi-app/backend/repository"
 )
 
-// RegisterRequest represents the request body for registration and login
+
 type RegisterRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -39,7 +39,7 @@ func Register(repo repository.UserRepository) gin.HandlerFunc {
 			return
 		}
 
-		// Hash the password
+		
 		hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 		if err != nil {
 			utils.ErrorResponse(c, http.StatusInternalServerError, "Could not hash password", err)
@@ -150,7 +150,7 @@ func RefreshToken(repo repository.UserRepository) gin.HandlerFunc {
 			return
 		}
 
-		// Remove the old refresh token and save the new one
+		
 		if err := repo.DeleteRefreshToken(claims.ID); err != nil {
 			utils.ErrorResponse(c, http.StatusInternalServerError, "Failed to delete old refresh token", err)
 			return
@@ -187,7 +187,7 @@ func Logout(repo repository.UserRepository) gin.HandlerFunc {
 				_ = repo.DeleteRefreshToken(claims.ID)
 			}
 		}
-		// Clear the cookie
+		
 		c.SetCookie("refresh_token", "", -1, "/", "", false, true)
 		c.JSON(http.StatusOK, gin.H{"message": "Logged out"})
 	}

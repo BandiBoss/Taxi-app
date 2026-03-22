@@ -49,27 +49,27 @@ export default function AppBar() {
     >
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
-          {/* ЛЕВЫЙ блок: логотип + кнопка */}
+          
           <Box
             sx={{
               flexGrow: 1,
               display: "flex",
               alignItems: "center",
-              gap: 2, // расстояние между лого и кнопками
+              gap: 2, 
             }}
           >
-            {/* Сам логотип */}
+            
             <Box
               component="img"
               src={logo}
               alt="Taxi Fast & Furious"
               sx={{
-                height: 60, // подкорректируйте размер по вкусу
+                height: 60, 
                 objectFit: "contain",
               }}
             />
 
-            {/* Навигационная кнопка */}
+            
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               {role === "user" && (
                 <Button
@@ -96,7 +96,7 @@ export default function AppBar() {
             </Box>
           </Box>
 
-          {/* ПРАВЫЙ блок (десктоп): переключатель темы + выход */}
+          
           <Box
             sx={{
               flexGrow: 1,
@@ -117,7 +117,7 @@ export default function AppBar() {
             </Button>
           </Box>
 
-          {/* Drawer для мобильных */}
+          
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton aria-label="Menu" onClick={toggleDrawer(true)}>
               <MenuIcon />
@@ -135,8 +135,7 @@ export default function AppBar() {
                   <IconButton onClick={toggleDrawer(false)}>
                     <CloseRoundedIcon />
                   </IconButton>
-                </Box>
-                {/* Здесь ваш контент для мобильного меню */}
+                </Box> 
               </Box>
             </Drawer>
           </Box>

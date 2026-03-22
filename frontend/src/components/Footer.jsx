@@ -53,7 +53,7 @@ export default function Footer() {
             <IconButton
               color="inherit"
               size="small"
-              href="https://gitlab.com/bogdanzn2002-group/taxiapp"
+              href="https://github.com/BandiBoss/Taxi-app"
               aria-label="GitLab"
               sx={{ alignSelf: "center" }}
             >

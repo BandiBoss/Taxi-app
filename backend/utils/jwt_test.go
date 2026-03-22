@@ -72,7 +72,7 @@ func TestJWTUtils(t *testing.T) {
 		if err != nil {
 			t.Fatalf("GenerateTokens failed: %v", err)
 		}
-		// Tamper with the token
+		
 		parts := strings.Split(access, ".")
 		if len(parts) != 3 {
 			t.Fatal("Invalid JWT format")
@@ -86,7 +86,7 @@ func TestJWTUtils(t *testing.T) {
 	})
 
 	t.Run("Expired access token", func(t *testing.T) {
-		// Generate a token with a short expiry
+		
 		userID := 2
 		role := "user"
 		now := time.Now()
@@ -118,7 +118,7 @@ func TestJWTUtils(t *testing.T) {
 		if err != nil {
 			t.Fatalf("GenerateTokens failed: %v", err)
 		}
-		// Set a new key (wrong key)
+		
 		wrongKey := generateTestKey(t)
 		SetJWTKey(wrongKey)
 		_, err = ParseJWT(access)

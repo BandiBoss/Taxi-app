@@ -25,7 +25,7 @@ func main() {
 	flag.Parse()
 
 	start := time.Now()
-	// 1) Open DB & AMQP
+	
 	db, err := sql.Open("postgres", "user=postgres password=12345 dbname=taxidb sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
@@ -61,7 +61,7 @@ func main() {
 		log.Fatalf("could not seed created orders: %v", err)
 	}
 
-	// 2) Grab DRIVERS and ORDERS
+	
 	drivers, err := repo.ListActiveDrivers(*numDrivers)
 	if err != nil {
 		log.Fatal(err)
@@ -79,7 +79,7 @@ func main() {
 		}
 		orderID := orders[i]
 
-		// assign and flip to in_progress
+		
 		if err := repo.AssignDriverAndStart(orderID, driverID); err != nil {
 			log.Printf("assign error for order %d driver %d: %v", orderID, driverID, err)
 			continue
@@ -88,7 +88,7 @@ func main() {
 		launched++
 		wg.Add(1)
 
-		// each goroutine runs the simulation then marks done
+		
 		go func(d, o int) {
 			defer wg.Done()
 			r := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -105,10 +105,10 @@ func main() {
 		}(driverID, orderID)
 	}
 
-	// 6) Wait for all sims to finish
+	
 	wg.Wait()
 
-	// 7) Log the summary
+	
 	elapsed := time.Since(start).Seconds()
 	log.Printf(
 		"Load test passed correctly. Number of drivers simulated: %d. Number of orders finished: %d. Duration: %.2f seconds.",

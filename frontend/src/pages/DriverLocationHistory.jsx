@@ -31,8 +31,8 @@ const columns = [
 export default function DriverLocationHistory() {
   const { id } = useParams();
   const [locations, setLocations] = useState([]);
-  const [page, setPage] = useState(0); // zero-based page index for MUI
-  const rowsPerPage = 50; // fixed page size
+  const [page, setPage] = useState(0);
+  const rowsPerPage = 50; 
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -110,7 +110,7 @@ export default function DriverLocationHistory() {
         <TablePagination
           rowsPerPageOptions={[rowsPerPage]}
           component="div"
-          count={-1} // total count unknown
+          count={-1}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

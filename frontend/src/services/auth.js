@@ -5,7 +5,6 @@ const TOKEN_KEY = "taxi_token";
 const ROLE_KEY = "taxi_role";
 const USERID_KEY = "taxi_user_id";
 
-// Cookie helpers
 function setCookie(name, value, days) {
   let expires = "";
   if (days) {
@@ -34,7 +33,7 @@ function eraseCookie(name) {
 export async function login(username, password) {
   const res = await loginApi(username, password);
   const { access_token: token } = res.data;
-  setCookie(TOKEN_KEY, token, 1); // 1 day expiry, adjust as needed
+  setCookie(TOKEN_KEY, token, 1); 
   const { user_id, role } = jwtDecode(token);
   localStorage.setItem(USERID_KEY, user_id);
   localStorage.setItem(ROLE_KEY, role);
@@ -49,7 +48,7 @@ export async function logout() {
   try {
     await logoutApi();
   } catch (e) {
-    // Intentionally ignore logout errors
+    
   }
   window.location.href = "/login";
 }
